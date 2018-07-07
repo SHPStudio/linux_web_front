@@ -7,7 +7,7 @@ import App from './app.vue';
 import 'iview/dist/styles/iview.css';
 import axios from 'axios';
 import vueAxios from 'vue-axios';
-axios.defaults.baseURL = '//localhost:5000/'
+axios.defaults.baseURL = '//127.0.0.1:5000/'
 axios.interceptors.response.use(function (response) {
     return response;
 }, function (error) {

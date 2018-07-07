@@ -4,7 +4,7 @@
             <Row align="middle"  type="flex" justify="center">
                     <Col span="6">
                         <FormItem label="上传后台war包：" :label-width="150">
-                            <Upload action="//localhost:5000/upload" name="myfile"
+                            <Upload action="//127.0.0.1:5000/upload" name="myfile"
                                     :before-upload="startUpload"
                                     :on-success="uploadSuccess"
                                     :on-error="uploadError">
@@ -12,6 +12,16 @@
                             </Upload>
                         </FormItem>
                     </Col>
+                    <Col span="6">
+                <FormItem label="docker应用名称：" :label-width="150">
+                    <Input v-model="docker_info.appName" placeholder="Enter something..."></Input>
+                </FormItem>
+                </Col>
+                <Col span="6">
+                <FormItem label="应用发布文件路径：" :label-width="150">
+                    <Input v-model="docker_info.appTargetPath" placeholder="Enter something..."></Input>
+                </FormItem>
+                </Col>
             </Row>
             <Row align="middle"  type="flex" justify="center">
                 <Col span="6">
@@ -25,9 +35,17 @@
 <script>
     export default {
         name: "filesystem",
+        created() {
+            console.log(this.axios)
+        },
         data() {
             return {
-                warFile: {}
+                warFile: {},
+                docker_info : {
+                    fileName: '',
+                    appName: '',
+                    appTargetPath: ''
+                }
             }
         },
         methods: {
@@ -45,14 +63,16 @@
             uploadSuccess(response, file, fileList) {
                 this.$Message.destroy();
                 this.$Message.info(JSON.stringify(response))
-                this.warFile = file;
+                this.docker_info.fileName = file.name;
             },
             startWar() {
                 var $this = this;
-                this.axios.post ('startWar',{"fileName": this.warFile.name})
+                this.axios.post ('startWar',this.docker_info)
                     .then(function(response){
                         if(response.data.success === true){
                             $this.$Message.success("执行成功！");
+                        }else {
+                            $this.$Message.error("执行失败！");
                         }
                     })
             }
